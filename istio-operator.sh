@@ -10,7 +10,6 @@ kubectl create ns istio-system
 kubectl label namespace default istio-injection=enabled
 
 kubectl apply -f istio-operator.yml
-while ! kubectl wait --for=condition=available --timeout=600s deployment/istio-ingressgateway -n istio-system; do sleep 1; done
 
 # Addons
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
