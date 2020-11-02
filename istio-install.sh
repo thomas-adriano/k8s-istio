@@ -8,7 +8,7 @@ curl -L "https://github.com/istio/istio/releases/download/$ISTIO_VERSION/istioct
 ./istioctl install --set profile=default -y
 kubectl label namespace default istio-injection=enabled --overwrite
 kubectl apply -f istio-operator.yml
-bash check-endpoint.sh istio-system istio-ingressgateway
+bash ./check-endpoint.sh istio-system istio-ingressgateway
 # Addons
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 export INGRESS_DOMAIN=${INGRESS_HOST}.nip.io
@@ -23,7 +23,7 @@ echo "-----> You can access Grafana at http://grafana.${INGRESS_DOMAIN}"
 ## Jaeger HTTP
 kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/jaeger.yaml
 bash istio-jaeger-ingress.sh
-while ! kubectl wait --for=condition=available --timeout=600s deployment/istio-tracing -n istio-system; do sleep 1; done
+while ! kubectl wait --for=condition=available --timeout=600s deployment/jaeger -n istio-system; do sleep 1; done
 echo "-----> You can access tracing (Jaeger) at http://tracing.${INGRESS_DOMAIN}"
 
 ## END
