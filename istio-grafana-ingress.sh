@@ -1,3 +1,4 @@
+cat <<EOF | kubectl replace --force -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -7,12 +8,12 @@ spec:
   selector:
     istio: ingressgateway
   servers:
-    - port:
-        number: 80
-        name: http-grafana
-        protocol: HTTP
-      hosts:
-        - "grafana.${INGRESS_DOMAIN}"
+  - port:
+      number: 80
+      name: http-grafana
+      protocol: HTTP
+    hosts:
+    - "grafana.${INGRESS_DOMAIN}"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -21,15 +22,15 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-    - "grafana.${INGRESS_DOMAIN}"
+  - "grafana.${INGRESS_DOMAIN}"
   gateways:
-    - grafana-gateway
+  - grafana-gateway
   http:
-    - route:
-        - destination:
-            host: grafana
-            port:
-              number: 3000
+  - route:
+    - destination:
+        host: grafana
+        port:
+          number: 3000
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -42,4 +43,4 @@ spec:
     tls:
       mode: DISABLE
 ---
-
+EOF
