@@ -17,26 +17,29 @@ echo "Ingress domain created: ${INGRESS_DOMAIN}"
 ## Grafana HTTP
 kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/grafana.yaml
 bash istio-grafana-ingress.sh
-while ! kubectl wait --for=condition=available --timeout=600s deployment/grafana -n istio-system; do sleep 1; done
-echo "-----> You can access Grafana at http://grafana.${INGRESS_DOMAIN}"
+while ! kubectl wait --for=condition=available --timeout=0 deployment/grafana -n istio-system; do sleep 1; done
+echo "-----> Grafana available at http://grafana.${INGRESS_DOMAIN}"
 
 ## Jaeger HTTP
 kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/jaeger.yaml
 bash istio-jaeger-ingress.sh
-while ! kubectl wait --for=condition=available --timeout=600s deployment/jaeger -n istio-system; do sleep 1; done
-echo "-----> You can access tracing (Jaeger) at http://tracing.${INGRESS_DOMAIN}"
-
-## Kiali HTTP
-kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/kiali.yaml
-bash istio-kiali-ingress.sh
-while ! kubectl wait --for=condition=available --timeout=600s deployment/kiali -n istio-system; do sleep 1; done
-echo "-----> You can access Kiali at http://kiali.${INGRESS_DOMAIN}"
+while ! kubectl wait --for=condition=available --timeout=0 deployment/jaeger -n istio-system; do sleep 1; done
+echo "-----> Tracing (Jaeger) available at http://tracing.${INGRESS_DOMAIN}"
 
 ## Prometheus HTTP
 kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/prometheus.yaml
 bash istio-prometheus-ingress.sh
-while ! kubectl wait --for=condition=available --timeout=600s deployment/prometheus -n istio-system; do sleep 1; done
-echo "-----> You can access Prometheus at http://prometheus.${INGRESS_DOMAIN}"
+while ! kubectl wait --for=condition=available --timeout=0 deployment/prometheus -n istio-system; do sleep 1; done
+echo "-----> Prometheus available at http://prometheus.${INGRESS_DOMAIN}"
+
+## Kiali HTTP
+# Currently Kiali only works when executing these 3 almost identic commands.
+kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/kiali.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/kiali.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/kiali.yaml
+bash istio-kiali-ingress.sh
+while ! kubectl wait --for=condition=available --timeout=0 deployment/kiali -n istio-system; do sleep 1; done
+echo "-----> Kiali available at http://kiali.${INGRESS_DOMAIN}"
 
 ## END
 echo "-----> Script finished successfully."
