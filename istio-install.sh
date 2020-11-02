@@ -8,7 +8,7 @@ curl -L "https://github.com/istio/istio/releases/download/$ISTIO_VERSION/istioct
 ./istioctl install --set profile=default -y
 kubectl label namespace default istio-injection=enabled --overwrite
 kubectl apply -f istio-operator.yml
-bash check-endpoint.sh istio-ingressgateway
+bash check-endpoint.sh istio-system istio-ingressgateway
 # Addons
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 export INGRESS_DOMAIN=${INGRESS_HOST}.nip.io
