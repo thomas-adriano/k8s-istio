@@ -1,11 +1,11 @@
 #!/bin/bash
 # This must be a script in order to use env variables
 
-cat <<EOF | kubectl replace --force -f -
+cat <<EOF | kubectl apply -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: grafana-gateway
+  name: tracing-gateway
   namespace: istio-system
 spec:
   selector:
@@ -13,35 +13,35 @@ spec:
   servers:
   - port:
       number: 80
-      name: http-grafana
+      name: http-tracing
       protocol: HTTP
     hosts:
-    - "grafana.${INGRESS_DOMAIN}"
+    - "tracing.${INGRESS_DOMAIN}"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: grafana-vs
+  name: tracing-vs
   namespace: istio-system
 spec:
   hosts:
-  - "grafana.${INGRESS_DOMAIN}"
+  - "tracing.${INGRESS_DOMAIN}"
   gateways:
-  - grafana-gateway
+  - tracing-gateway
   http:
   - route:
     - destination:
-        host: grafana
+        host: tracing
         port:
-          number: 3000
+          number: 80
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: grafana
+  name: tracing
   namespace: istio-system
 spec:
-  host: grafana
+  host: tracing
   trafficPolicy:
     tls:
       mode: DISABLE

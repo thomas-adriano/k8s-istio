@@ -24,4 +24,11 @@ bash istio-grafana-ingress.sh
 while ! kubectl wait --for=condition=available --timeout=600s deployment/grafana -n istio-system; do sleep 1; done
 echo "-----> You can access Grafana at http://grafana.${INGRESS_DOMAIN}"
 
+## Jaeger HTTP
+kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/jaeger.yaml
+bash istio-jaeger-ingress.sh
+while ! kubectl wait --for=condition=available --timeout=600s deployment/istio-tracing -n istio-system; do sleep 1; done
+echo "-----> You can access tracing (Jaeger) at http://tracing.${INGRESS_DOMAIN}"
+
+## END
 echo "-----> Script finished successfully."
