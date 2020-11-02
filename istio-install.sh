@@ -27,13 +27,13 @@ while ! kubectl wait --for=condition=available --timeout=600s deployment/jaeger 
 echo "-----> You can access tracing (Jaeger) at http://tracing.${INGRESS_DOMAIN}"
 
 ## Kiali HTTP
-kubectl replace --force -f kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/kiali.yaml
+kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/kiali.yaml
 bash istio-kiali-ingress.sh
 while ! kubectl wait --for=condition=available --timeout=600s deployment/kiali -n istio-system; do sleep 1; done
 echo "-----> You can access Kiali at http://kiali.${INGRESS_DOMAIN}"
 
 ## Prometheus HTTP
-kubectl replace --force -f kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/prometheus.yaml
+kubectl replace --force -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/prometheus.yaml
 bash istio-prometheus-ingress.sh
 while ! kubectl wait --for=condition=available --timeout=600s deployment/prometheus -n istio-system; do sleep 1; done
 echo "-----> You can access Prometheus at http://prometheus.${INGRESS_DOMAIN}"
