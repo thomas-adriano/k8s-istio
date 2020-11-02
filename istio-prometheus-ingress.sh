@@ -5,7 +5,7 @@ cat <<EOF | kubectl replace --force -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: tracing-gateway
+  name: prometheus-gateway
   namespace: istio-system
 spec:
   selector:
@@ -13,35 +13,35 @@ spec:
   servers:
   - port:
       number: 80
-      name: http-tracing
+      name: http-prom
       protocol: HTTP
     hosts:
-    - "tracing.${INGRESS_DOMAIN}"
+    - "prometheus.${INGRESS_DOMAIN}"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: tracing-vs
+  name: prometheus-vs
   namespace: istio-system
 spec:
   hosts:
-  - "tracing.${INGRESS_DOMAIN}"
+  - "prometheus.${INGRESS_DOMAIN}"
   gateways:
-  - tracing-gateway
+  - prometheus-gateway
   http:
   - route:
     - destination:
-        host: tracing
+        host: prometheus
         port:
-          number: 80
+          number: 9090
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: tracing
+  name: prometheus
   namespace: istio-system
 spec:
-  host: tracing
+  host: prometheus
   trafficPolicy:
     tls:
       mode: DISABLE

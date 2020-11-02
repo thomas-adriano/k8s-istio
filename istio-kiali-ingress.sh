@@ -5,7 +5,7 @@ cat <<EOF | kubectl replace --force -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: tracing-gateway
+  name: kiali-gateway
   namespace: istio-system
 spec:
   selector:
@@ -13,35 +13,35 @@ spec:
   servers:
   - port:
       number: 80
-      name: http-tracing
+      name: http-kiali
       protocol: HTTP
     hosts:
-    - "tracing.${INGRESS_DOMAIN}"
+    - "kiali.${INGRESS_DOMAIN}"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: tracing-vs
+  name: kiali-vs
   namespace: istio-system
 spec:
   hosts:
-  - "tracing.${INGRESS_DOMAIN}"
+  - "kiali.${INGRESS_DOMAIN}"
   gateways:
-  - tracing-gateway
+  - kiali-gateway
   http:
   - route:
     - destination:
-        host: tracing
+        host: kiali
         port:
-          number: 80
+          number: 20001
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: tracing
+  name: kiali
   namespace: istio-system
 spec:
-  host: tracing
+  host: kiali
   trafficPolicy:
     tls:
       mode: DISABLE

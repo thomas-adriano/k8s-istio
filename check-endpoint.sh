@@ -3,7 +3,7 @@
 # Will run forever...
 external_ip=""
 while [ -z $external_ip ]; do
-  echo "Waiting for end point..."
+  echo "Waiting for endpoint: namespace $1, service $2"
   external_ip=$(kubectl -n $1 get svc $2 --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
   [ -z "$external_ip" ] && sleep 10
 done
