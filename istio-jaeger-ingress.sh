@@ -1,6 +1,5 @@
 #!/bin/bash
 # This must be a script in order to use env variables
-
 cat <<EOF | kubectl replace --force -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
